@@ -1,6 +1,6 @@
-#include <stdio.h>
+#include "busSystem.h"
 int main(int argc, char const *argv[])
 {
-	/* code */
+	datainfo::text();
 	return 0;
 }

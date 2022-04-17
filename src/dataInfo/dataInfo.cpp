@@ -1,7 +1,14 @@
-#include <stdio.h>
-
-int main(int argc, char const *argv[])
+#include "../main/busSystem.h"
+namespace datainfo
 {
-	
-	return 0;
+	void text()
+	{
+		string allSite[300];
+		parseAllSite(allSite);
+		int i=0;
+		while (allSite[i]!="\0")
+		{
+			cout << allSite[i] << endl;
+		}
+	}
 }
