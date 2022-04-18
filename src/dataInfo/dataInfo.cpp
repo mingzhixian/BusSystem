@@ -1,14 +1,17 @@
 #include "../main/busSystem.h"
 namespace datainfo
 {
-	void text()
+	//新建图
+	GraphLink site;
+	void run()
 	{
-		string allSite[300];
-		parseAllSite(allSite);
-		int i=0;
-		while (allSite[i]!="\0")
-		{
-			cout << allSite[i] << endl;
-		}
+		//初始化图
+		initGraphLink(&site);
+		//解析站点，并作为顶点插入图
+		parseAllSite(&site);
+		//解析所有站点之间的信息，并作为边插入图
+		parseSite(&site);
+		//测试用--显示图
+		showGraphLink(&site);
 	}
 }

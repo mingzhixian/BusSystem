@@ -1,12 +1,108 @@
 #include <iostream>
+#include <malloc.h>
 
 using namespace std;
 
-
 #ifndef _DATA_INFO
 #define _DATA_INFO
-namespace datainfo {
-    void parseAllSite(string* allSite);
-    void text();
+namespace datainfo
+{
+    //图文件
+
+    //节点结构
+    typedef struct T
+    {
+        string name;
+        //重载相等操作符
+        bool operator==(const T &obj)
+        {
+            return (name == obj.name);
+        }
+    } T;
+
+    //边的结构
+    typedef struct Edge
+    {
+        //顶点的下标
+        int idx;
+        //公交车
+        string bus[20];
+        //公交时间
+        int busTime;
+        //步行
+        int walk;
+        //步行时间
+        int walkTime;
+        //指向下一个边的指针
+        struct Edge *link;
+    } Edge;
+
+    //顶点的结构
+    typedef struct Vertex
+    {
+        //顶点的值
+        T data;
+        //边
+        Edge *adj;
+    } Vertex;
+
+    //图的结构
+    typedef struct GraphLink
+    {
+        //最大节点数目
+        int MaxVertices;
+        //目前节点数目
+        int NumVertices;
+        //边的数目
+        int NumEdges;
+        //顶点的链表
+        Vertex *nodeTable;
+    } GraphLink;
+
+    //初始化图
+    void initGraphLink(GraphLink *g);
+
+    //显示图
+    void showGraphLink(GraphLink *g);
+
+    //插入顶点
+    void insertVertex(GraphLink *g, T v);
+
+    //查找顶点在顶点链表的下标
+    int getVertexIndex(GraphLink *g, T v);
+
+    //插入边关系(尾插）
+    void insertEdgeTail(GraphLink *g, T v1, T v2, string bus[20], int busTime, int walk, int walkTime);
+
+    //插入边关系(头插）
+    void insertEdgeHead(GraphLink *g, T v1, T v2, string bus[20], int busTime, int walk, int walkTime);
+
+    //删除边
+    void removeEdge(GraphLink *g, T v1, T v2);
+
+    //删除顶点
+    void removeVertex(GraphLink *g, T v);
+
+    //清空图
+    void destroyGraphLink(GraphLink *g);
+
+    //取得指定顶点的第一个后序顶点
+    int getFirstNeighbor(GraphLink *g, T v);
+
+    //取得ve1与ve2相连的边的第一个后序顶点
+    int getNextNeighbor(GraphLink *g, T ve1, T ve2);
+
+    // dataInfo主文件
+
+    //初始化数据
+    void run();
+
+    //解析siteinfo文件
+
+    //解析所有站点
+    void parseAllSite(GraphLink *g);
+
+    //解析所有站与站之间的关系
+    void parseSite(GraphLink *g);
 }
 #endif

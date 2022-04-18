@@ -2,29 +2,36 @@
 namespace datainfo
 {
 	//获取所有站点
-	void parseAllSite(string* allSite)
+	void parseAllSite(GraphLink *g)
 	{
 		int i = 0;
-		FILE *f = fopen("siteinfo.txt", "r");
-		char siteName[20];
-		cout << f << endl;
-		fscanf(f, "%s", siteName);
-		/* while (true)
+		FILE *f = fopen("./siteInfo/siteinfo.txt", "r");
+		//存取每个站点名
+		char siteName[24];
+		char tmp = ' ';
+		T *p = (T *)malloc(sizeof(T));
+		while (true)
 		{
 			//读取站名，遇到空格结束
 			fscanf(f, "%s", siteName);
-			cout << "11"<<endl;
-			//结束标志
-			if (siteName == "\n")
-				break;
-			allSite[i++] = siteName;
+			//存取站名
+			p->name = siteName;
+			//插入图中
+			insertVertex(g, *p);
 			//读取空格
-			fscanf(f, "%2c", string(siteName));
-		} */
+			fscanf(f, "%c%c%c", &tmp, &tmp, &tmp);
+			//结束标志
+			if (tmp == '\n')
+				break;
+			else
+				//文件读取指针后退一步
+				fseek(f, -1, SEEK_CUR);
+		}
+		free(p);
 		fclose(f);
 	}
 	//获取站点之间的公交信息
-	void  parseSite()
+	void parseSite(GraphLink *g)
 	{
 	}
 
