@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string.h>
 #include <malloc.h>
 
 using namespace std;
@@ -12,7 +13,7 @@ namespace datainfo
     //节点结构
     typedef struct T
     {
-        string name;
+        string name="";
         //重载相等操作符
         bool operator==(const T &obj)
         {
@@ -70,6 +71,9 @@ namespace datainfo
 
     //查找顶点在顶点链表的下标
     int getVertexIndex(GraphLink *g, T v);
+
+    //获取边
+    Edge *getEdge(GraphLink *g, T v1, T v2);
 
     //插入边关系(尾插）
     void insertEdgeTail(GraphLink *g, T v1, T v2, string bus[20], int busTime, int walk, int walkTime);

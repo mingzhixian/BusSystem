@@ -26,10 +26,16 @@ for lu in urllist:
     for li in lis:
         if li.select("em")[0].get_text() not in allSite:
             allSite.append(li.select("em")[0].get_text())
+        bustime=random.randint(10, 45)
+        walk=random.randint(40, 2000)
+        walktime=int(walk/80)
+        if walk>500:
+            walk=2000
+            walktime=2000
         siteInfo+=(li.select("em")[0].get_text() +
-                   " <-"+str(random.randint(10, 45))+"-> ")
+                   " <- bustime:"+str(bustime)+" walk:"+str(walk)+" walktime:"+str(walktime)+" -> ")
     siteInfo+=("\n")
-    time.sleep(5)
+    time.sleep(3)
 file = open("./siteinfo.txt", 'w')
 for site in allSite:
     file.write(site+"  ")

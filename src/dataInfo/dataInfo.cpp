@@ -12,6 +12,6 @@ namespace datainfo
 		//解析所有站点之间的信息，并作为边插入图
 		parseSite(&site);
 		//测试用--显示图
-		showGraphLink(&site);
+		//showGraphLink(&site);
 	}
 }

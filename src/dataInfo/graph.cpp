@@ -18,7 +18,6 @@ namespace datainfo
 	}
 
 	//显示图
-	// todo:待办，为显示边的信息
 	void showGraphLink(GraphLink *g)
 	{
 		//如果图为空则返回
@@ -34,7 +33,15 @@ namespace datainfo
 			while (NULL != p)
 			{
 				cout << g->nodeTable[p->idx].data.name << " <- "
-					 << "bus:" << p->bus << "bustime:" << p->busTime << "walk:" << p->walk << "walktime:" << p->walkTime << "-> ";
+					 << "bus:";
+				int i = 0;
+				while (p->bus[i] != "")
+				{
+					cout << p->bus[i] << " ";
+					i++;
+				}
+				cout << "bustime:" << p->busTime << "walk:" << p->walk << "walktime:" << p->walkTime << " -> ";
+				;
 				p = p->link;
 			}
 			//换行
@@ -61,6 +68,40 @@ namespace datainfo
 		}
 		//为找到返回-1
 		return -1;
+	}
+
+	//获取边
+	Edge *getEdge(GraphLink *g, T v1, T v2)
+	{
+		//查找顶点在图中的下标
+		int p1 = getVertexIndex(g, v1);
+		int p2 = getVertexIndex(g, v2);
+		Edge *p = g->nodeTable[p1].adj;
+		//顶点不存在或边链为空则退出
+		if (p1 == -1 || p2 == -1 || p == NULL)
+			return NULL;
+		//判断第一个边是否是目标边
+		if (p->idx == p2)
+		{
+			//返回第一条边
+			return p;
+		}
+		//寻找边
+		Edge *tmp = p;
+		while (tmp->link != NULL && tmp->link->idx != p2)
+		{
+			tmp = tmp->link;
+		}
+		//没有找到边
+		if (tmp->link == NULL)
+		{
+			return NULL;
+		}
+		//找到边
+		else
+		{
+			return tmp->link;
+		}
 	}
 
 	//创建边，传入顶点的边链和新边参数，服务于insertEdgeTail函数
@@ -98,12 +139,14 @@ namespace datainfo
 	//创建边，传入顶点的边链和新边参数，服务于insertEdgeHead函数
 	void createEdgeHead(Edge **e, int p1, int p2, string bus[20], int busTime, int walk, int walkTime)
 	{
-
+		// todo,找到边添加信息
 		Edge *p = (Edge *)malloc(sizeof(Edge));
 		p->idx = p2;
-		for (int i = 0; i < 20; i++)
+		int i = 0;
+		while (bus[i] != "")
 		{
 			p->bus[i] = bus[i];
+			i++;
 		}
 		p->busTime = busTime;
 		p->walk = walk;
@@ -121,14 +164,35 @@ namespace datainfo
 		//顶点不存在则退出
 		if (p1 == -1 || p2 == -1)
 			return;
-		//分别在顶点对应的边链末尾创建新边
-		createEdgeTail(&(g->nodeTable[p1].adj), p2, bus, busTime, walk, walkTime);
-		g->NumEdges++;
-		createEdgeTail(&(g->nodeTable[p2].adj), p1, bus, busTime, walk, walkTime);
-		g->NumEdges++;
+		Edge *edge1 = getEdge(g, v1, v2);
+		if (edge1 != NULL)
+		{
+			//如果已存在边，则增加公交
+			Edge *edge2 = getEdge(g, v2, v1);
+			int i = 0;
+			while (edge1->bus[i] != "")
+			{
+				i++;
+			}
+			edge1->bus[i] = bus[0];
+			i = 0;
+			while (edge2->bus[i] != "")
+			{
+				i++;
+			}
+			edge2->bus[i] = bus[0];
+		}
+		else
+		{
+			//分别在顶点对应的边链末尾创建新边
+			createEdgeTail(&(g->nodeTable[p1].adj), p2, bus, busTime, walk, walkTime);
+			g->NumEdges++;
+			createEdgeTail(&(g->nodeTable[p2].adj), p1, bus, busTime, walk, walkTime);
+			g->NumEdges++;
+		}
 	}
 
-	//插入边关系(头插）
+	//插入边关系(头插）,一般使用头插入，因为尾插入需要循环找到末尾，浪费时间
 	void insertEdgeHead(GraphLink *g, T v1, T v2, string bus[20], int busTime, int walk, int walkTime)
 	{
 		//查找顶点在图中的下标
@@ -137,11 +201,33 @@ namespace datainfo
 		//顶点不存在则退出
 		if (p1 == -1 || p2 == -1)
 			return;
-		//分别在顶点对应的边链开头创建新边
-		createEdgeHead(&(g->nodeTable[p1].adj), p1, p2, bus, busTime, walk, walkTime);
-		g->NumEdges++;
-		createEdgeHead(&(g->nodeTable[p2].adj), p2, p1, bus, busTime, walk, walkTime);
-		g->NumEdges++;
+		Edge *edge1 = getEdge(g, v1, v2);
+
+		if (edge1 != NULL)
+		{
+			//如果已存在边，则增加公交
+			Edge *edge2 = getEdge(g, v2, v1);
+			int i = 0;
+			while (edge1->bus[i] != "")
+			{
+				i++;
+			}
+			edge1->bus[i] = bus[0];
+			i = 0;
+			while (edge2->bus[i] != "")
+			{
+				i++;
+			}
+			edge2->bus[i] = bus[0];
+		}
+		else
+		{
+			//分别在顶点对应的边链开头创建新边
+			createEdgeHead(&(g->nodeTable[p1].adj), p1, p2, bus, busTime, walk, walkTime);
+			g->NumEdges++;
+			createEdgeHead(&(g->nodeTable[p2].adj), p2, p1, bus, busTime, walk, walkTime);
+			g->NumEdges++;
+		}
 	}
 
 	//删除边，服务于removeEdge函数
