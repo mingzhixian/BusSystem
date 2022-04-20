@@ -13,7 +13,7 @@ namespace datainfo
     //节点结构
     typedef struct T
     {
-        string name="";
+        string name = "";
         //重载相等操作符
         bool operator==(const T &obj)
         {
@@ -90,16 +90,18 @@ namespace datainfo
     //清空图
     void destroyGraphLink(GraphLink *g);
 
-    //取得指定顶点的第一个后序顶点
-    int getFirstNeighbor(GraphLink *g, T v);
-
-    //取得ve1与ve2相连的边的第一个后序顶点
-    int getNextNeighbor(GraphLink *g, T ve1, T ve2);
+    //获取两点之间最短路径：算法
+    void floyd(GraphLink *g)
+    {
+    }
 
     // dataInfo主文件
 
     //初始化数据
     void run();
+
+    //获取程序的内存使用
+    void GetProcessMemory();
 
     //解析siteinfo文件
 

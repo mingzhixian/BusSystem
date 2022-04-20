@@ -365,39 +365,5 @@ namespace datainfo
 		g->MaxVertices = g->NumVertices = g->NumEdges = 0;
 	}
 
-	//取得指定顶点的第一个后序顶点
-	int getFirstNeighbor(GraphLink *g, T v)
-	{
-		int i = getVertexIndex(g, v);
-		//顶点不存在
-		if (i == -1)
-			return -1;
-		Edge *p = g->nodeTable[i].adj;
-		if (NULL != p)
-			return p->idx;
-		else
-			return -1;
-	}
-
-	//取得ve1与ve2相连的边的第一个后序顶点
-	int getNextNeighbor(GraphLink *g, T ve1, T ve2)
-	{
-		int v1 = getVertexIndex(g, ve1);
-		int v2 = getVertexIndex(g, ve2);
-		//顶点不存在
-		if (v1 == -1 || v2 == -1)
-			return -1;
-		//查找ve1与ve2相连的边
-		Edge *t = g->nodeTable[v1].adj;
-		while (t != NULL && t->idx != v2)
-		{
-			t = t->link;
-		}
-		//如果存在相连的边且存在后续边则返回值
-		if (NULL != t && t->link != NULL)
-		{
-			return t->link->idx;
-		}
-		return -1;
-	}
+	//获取两点之间最短路径：算法
 }
