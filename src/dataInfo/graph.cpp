@@ -1,4 +1,4 @@
-#include "../main/busSystem.h"
+#include "dataInfo"
 namespace datainfo
 {
 	//初始化图
@@ -366,4 +366,7 @@ namespace datainfo
 	}
 
 	//获取两点之间最短路径：算法
+	void floyd(GraphLink *g)
+	{
+	}
 }

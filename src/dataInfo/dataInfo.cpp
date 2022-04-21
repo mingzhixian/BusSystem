@@ -1,9 +1,9 @@
-#include "../main/busSystem.h"
-#include <unistd.h>
+#include "dataInfo"
 namespace datainfo
 {
 	//新建图
 	GraphLink site;
+	//运行
 	void run()
 	{
 		//初始化图
@@ -16,8 +16,8 @@ namespace datainfo
 		parseSite(&site);
 
 		//测试用--显示图
-		// showGraphLink(&site);
-		
+		showGraphLink(&site);
+
 		//清空图--在linux下效果不会明显显示，因为数据量较小，系统不会真正释放，具体参见https://blog.csdn.net/weixin_30819085/article/details/101325304
 		destroyGraphLink(&site);
 	}

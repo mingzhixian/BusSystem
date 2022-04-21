@@ -1,7 +1,7 @@
-#include "../main/busSystem.h"
+#include "dataInfo"
 namespace datainfo
 {
-	FILE *f = fopen("./siteInfo/siteinfo.txt", "r");
+	FILE *f = fopen("needToSed/src/siteInfo/siteinfo.txt", "r");
 	//获取所有站点
 	void parseAllSite(GraphLink *g)
 	{

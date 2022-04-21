@@ -1,14 +1,37 @@
-busSystem:out main.o dataInfo.o
-	gcc ./out/src/*.o -o busSystem
+busSystem: start main http run over
+	
+start:
+	mkdir -p ./out/tmp/src
+	mkdir -p ./out/tmp/http
+	p=`pwd` && n=$${p//\//\\\/} && sed -i "s/needToSed/$$n/" ./src/dataInfo/parseSiteInfo.cpp
 
-out:
-	mkdir -p ./out/src
+main:dataInfo.o graph.o parseSiteInfo.o main.o
+	g++ ./out/tmp/src/*.o -o ./out/busSystem
 
-main.o:src/main/busSystem.h src/main/main.cpp
-	gcc -c main.c -o ./out/src/main.o
+http:http.o
+	g++ ./out/tmp/http/*.o -o ./out/http
 
-dataInfo.o:src/dataInfo/*.cpp src/main/busSystem.h
-	gcc -c dataInfo.cpp -o ./out/src/dataInfo.o
+run:
+	./out/busSystem
+	./out/http
+
+dataInfo.o:
+	g++ -c ./src/dataInfo/dataInfo.cpp -o ./out/tmp/src/dataInfo.o
+
+graph.o:
+	g++ -c ./src/dataInfo/graph.cpp -o ./out/tmp/src/graph.o
+
+parseSiteInfo.o:
+	g++ -c ./src/dataInfo/parseSiteInfo.cpp -o ./out/tmp/src/parseSiteInfo.o
+
+main.o:
+	g++ -c ./src/main/main.cpp -o ./out/tmp/src/main.o
+
+http.o:
+	g++ -c ./http/http.cpp -o ./out/tmp/http/http.o
+
+over:
+	p=`pwd` && n=$${p//\//\\\/} && sed -i "s/$$n/needToSed/" ./src/dataInfo/parseSiteInfo.cpp
 
 clean:
 	rm -rf ./out
