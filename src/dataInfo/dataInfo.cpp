@@ -1,4 +1,4 @@
-#include "dataInfo"
+#include "dataInfo.h"
 namespace datainfo
 {
 	//新建图

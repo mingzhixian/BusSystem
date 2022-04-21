@@ -61,52 +61,52 @@ namespace datainfo
     } GraphLink;
 
     //初始化图
-    void initGraphLink(GraphLink *g);
+    extern void initGraphLink(GraphLink *g);
 
     //显示图
-    void showGraphLink(GraphLink *g);
+    extern void showGraphLink(GraphLink *g);
 
     //插入顶点
-    void insertVertex(GraphLink *g, T v);
+    extern void insertVertex(GraphLink *g, T v);
 
     //查找顶点在顶点链表的下标
-    int getVertexIndex(GraphLink *g, T v);
+    extern int getVertexIndex(GraphLink *g, T v);
 
     //获取边
-    Edge *getEdge(GraphLink *g, T v1, T v2);
+    extern Edge *getEdge(GraphLink *g, T v1, T v2);
 
     //插入边关系(尾插）
-    void insertEdgeTail(GraphLink *g, T v1, T v2, string bus[20], int busTime, int walk, int walkTime);
+    extern void insertEdgeTail(GraphLink *g, T v1, T v2, string bus[20], int busTime, int walk, int walkTime);
 
     //插入边关系(头插）
-    void insertEdgeHead(GraphLink *g, T v1, T v2, string bus[20], int busTime, int walk, int walkTime);
+    extern void insertEdgeHead(GraphLink *g, T v1, T v2, string bus[20], int busTime, int walk, int walkTime);
 
     //删除边
-    void removeEdge(GraphLink *g, T v1, T v2);
+    extern void removeEdge(GraphLink *g, T v1, T v2);
 
     //删除顶点
-    void removeVertex(GraphLink *g, T v);
+    extern void removeVertex(GraphLink *g, T v);
 
     //清空图
-    void destroyGraphLink(GraphLink *g);
+    extern void destroyGraphLink(GraphLink *g);
 
     //获取两点之间最短路径：算法
-    void floyd(GraphLink *g);
+    extern void floyd(GraphLink *g);
 
     // dataInfo主文件
 
     //初始化数据
-    void run();
+    extern void run();
 
     //获取程序的内存使用
-    void GetProcessMemory();
+    extern void GetProcessMemory();
 
     //解析siteinfo文件
 
     //解析所有站点
-    void parseAllSite(GraphLink *g);
+    extern void parseAllSite(GraphLink *g);
 
     //解析所有站与站之间的关系
-    void parseSite(GraphLink *g);
+    extern void parseSite(GraphLink *g);
 }
 #endif

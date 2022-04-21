@@ -1,4 +1,4 @@
-#include "dataInfo"
+#include "dataInfo.h"
 namespace datainfo
 {
 	FILE *f = fopen("needToSed/src/siteInfo/siteinfo.txt", "r");
