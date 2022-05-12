@@ -91,7 +91,7 @@ namespace datainfo
     extern void destroyGraphLink(GraphLink *g);
 
     //获取两点之间最短路径：算法
-    extern void floyd(GraphLink *g);
+    extern void get(GraphLink *g);
 
     // dataInfo主文件
 
