@@ -2,37 +2,34 @@
 namespace dataInfo
 {
 	//初始化图
-	void initGraphLink(GraphLink *g)
+	GraphLink::GraphLink()
 	{
 		//初始化最大节点个数以及当前节点个数、当前边数
-		g->MaxVertices = 300;
-		g->NumVertices = g->NumEdges = 0;
+		MaxVertices = 300;
+		NumVertices = NumEdges = 0;
 
 		//分配顶点链表空间
-		g->nodeTable = (Vertex *)malloc(sizeof(Vertex) * g->MaxVertices);
+		nodeTable = (Vertex *)malloc(sizeof(Vertex) * MaxVertices);
 		//将所有顶点的边置空
-		for (int i = 0; i < g->MaxVertices; ++i)
+		for (int i = 0; i < MaxVertices; ++i)
 		{
-			g->nodeTable[i].adj = NULL;
+			nodeTable[i].adj = NULL;
 		}
 	}
 
 	//显示图
-	void showGraphLink(GraphLink *g)
+	void GraphLink::showGraphLink()
 	{
-		//如果图为空则返回
-		if (NULL == g)
-			return;
 		//按照当前顶点数目打印边链
-		for (int i = 0; i < g->NumVertices; i++)
+		for (int i = 0; i < NumVertices; i++)
 		{
 			//打印站点的下标以及站点名字
-			cout << i << g->nodeTable[i].data.name << " : ";
-			Edge *p = g->nodeTable[i].adj;
+			cout << i << nodeTable[i].data.name << " : ";
+			Edge *p = nodeTable[i].adj;
 			//打印该顶点每一条边
 			while (NULL != p)
 			{
-				cout << g->nodeTable[p->idx].data.name << " <- "
+				cout << nodeTable[p->idx].data.name << " <- "
 					 << "bus:";
 				int i = 0;
 				while (p->bus[i] != "")
@@ -50,20 +47,20 @@ namespace dataInfo
 	}
 
 	//插入顶点
-	void insertVertex(GraphLink *g, T v)
+	void GraphLink::insertVertex(T v)
 	{
 		//判断是否超出图的最大范围
-		if (g->NumVertices >= g->MaxVertices)
+		if (NumVertices >= MaxVertices)
 			return;
-		g->nodeTable[g->NumVertices++].data = v;
+		nodeTable[NumVertices++].data = v;
 	}
 
 	//查找顶点在顶点链表的下标
-	int getVertexIndex(GraphLink *g, T v)
+	int GraphLink::getVertexIndex(T v)
 	{
-		for (int i = 0; i < g->NumVertices; ++i)
+		for (int i = 0; i < NumVertices; ++i)
 		{
-			if (v == g->nodeTable[i].data)
+			if (v == nodeTable[i].data)
 				return i;
 		}
 		//为找到返回-1
@@ -71,12 +68,12 @@ namespace dataInfo
 	}
 
 	//获取边
-	Edge *getEdge(GraphLink *g, T v1, T v2)
+	Edge *GraphLink::getEdge(T v1, T v2)
 	{
 		//查找顶点在图中的下标
-		int p1 = getVertexIndex(g, v1);
-		int p2 = getVertexIndex(g, v2);
-		Edge *p = g->nodeTable[p1].adj;
+		int p1 = getVertexIndex(v1);
+		int p2 = getVertexIndex(v2);
+		Edge *p = nodeTable[p1].adj;
 		//顶点不存在或边链为空则退出
 		if (p1 == -1 || p2 == -1 || p == NULL)
 			return NULL;
@@ -105,7 +102,7 @@ namespace dataInfo
 	}
 
 	//创建边，传入顶点的边链和新边参数，服务于insertEdgeTail函数
-	void createEdgeTail(Edge **e, int idx, string bus[20], int busTime, int walk, int walkTime)
+	void GraphLink::createEdgeTail(Edge **e, int idx, string bus[20], int busTime, int walk, int walkTime)
 	{
 		//分配新边的空间
 		Edge *p = (Edge *)malloc(sizeof(Edge));
@@ -137,7 +134,7 @@ namespace dataInfo
 	}
 
 	//创建边，传入顶点的边链和新边参数，服务于insertEdgeHead函数
-	void createEdgeHead(Edge **e, int p1, int p2, string bus[20], int busTime, int walk, int walkTime)
+	void GraphLink::createEdgeHead(Edge **e, int p1, int p2, string bus[20], int busTime, int walk, int walkTime)
 	{
 		// todo,找到边添加信息
 		Edge *p = (Edge *)malloc(sizeof(Edge));
@@ -156,19 +153,19 @@ namespace dataInfo
 	}
 
 	//插入边关系(尾插）
-	void insertEdgeTail(GraphLink *g, T v1, T v2, string bus[20], int busTime, int walk, int walkTime)
+	void GraphLink::insertEdgeTail(T v1, T v2, string bus[20], int busTime, int walk, int walkTime)
 	{
 		//查找顶点在图中的下标
-		int p1 = getVertexIndex(g, v1);
-		int p2 = getVertexIndex(g, v2);
+		int p1 = getVertexIndex(v1);
+		int p2 = getVertexIndex(v2);
 		//顶点不存在则退出
 		if (p1 == -1 || p2 == -1)
 			return;
-		Edge *edge1 = getEdge(g, v1, v2);
+		Edge *edge1 = getEdge(v1, v2);
 		if (edge1 != NULL)
 		{
 			//如果已存在边，则增加公交
-			Edge *edge2 = getEdge(g, v2, v1);
+			Edge *edge2 = getEdge(v2, v1);
 			int i = 0;
 			while (edge1->bus[i] != "")
 			{
@@ -185,28 +182,28 @@ namespace dataInfo
 		else
 		{
 			//分别在顶点对应的边链末尾创建新边
-			createEdgeTail(&(g->nodeTable[p1].adj), p2, bus, busTime, walk, walkTime);
-			g->NumEdges++;
-			createEdgeTail(&(g->nodeTable[p2].adj), p1, bus, busTime, walk, walkTime);
-			g->NumEdges++;
+			createEdgeTail(&(nodeTable[p1].adj), p2, bus, busTime, walk, walkTime);
+			NumEdges++;
+			createEdgeTail(&(nodeTable[p2].adj), p1, bus, busTime, walk, walkTime);
+			NumEdges++;
 		}
 	}
 
 	//插入边关系(头插）,一般使用头插入，因为尾插入需要循环找到末尾，浪费时间
-	void insertEdgeHead(GraphLink *g, T v1, T v2, string bus[20], int busTime, int walk, int walkTime)
+	void GraphLink::insertEdgeHead(T v1, T v2, string bus[20], int busTime, int walk, int walkTime)
 	{
 		//查找顶点在图中的下标
-		int p1 = getVertexIndex(g, v1);
-		int p2 = getVertexIndex(g, v2);
+		int p1 = getVertexIndex(v1);
+		int p2 = getVertexIndex(v2);
 		//顶点不存在则退出
 		if (p1 == -1 || p2 == -1)
 			return;
-		Edge *edge1 = getEdge(g, v1, v2);
+		Edge *edge1 = getEdge(v1, v2);
 
 		if (edge1 != NULL)
 		{
 			//如果已存在边，则增加公交
-			Edge *edge2 = getEdge(g, v2, v1);
+			Edge *edge2 = getEdge(v2, v1);
 			int i = 0;
 			while (edge1->bus[i] != "")
 			{
@@ -223,10 +220,10 @@ namespace dataInfo
 		else
 		{
 			//分别在顶点对应的边链开头创建新边
-			createEdgeHead(&(g->nodeTable[p1].adj), p1, p2, bus, busTime, walk, walkTime);
-			g->NumEdges++;
-			createEdgeHead(&(g->nodeTable[p2].adj), p2, p1, bus, busTime, walk, walkTime);
-			g->NumEdges++;
+			createEdgeHead(&(nodeTable[p1].adj), p1, p2, bus, busTime, walk, walkTime);
+			NumEdges++;
+			createEdgeHead(&(nodeTable[p2].adj), p2, p1, bus, busTime, walk, walkTime);
+			NumEdges++;
 		}
 	}
 
@@ -268,36 +265,36 @@ namespace dataInfo
 	}
 
 	//删除边
-	void removeEdge(GraphLink *g, T v1, T v2)
+	void GraphLink::removeEdge(T v1, T v2)
 	{
 		//查找顶点在图中的下标
-		int p1 = getVertexIndex(g, v1);
-		int p2 = getVertexIndex(g, v2);
+		int p1 = getVertexIndex(v1);
+		int p2 = getVertexIndex(v2);
 		//顶点不存在则退出
 		if (p1 == -1 || p2 == -1)
 			return;
 
 		//删除边
-		int r = delateEdge(&(g->nodeTable[p1].adj), p2);
+		int r = delateEdge(&(nodeTable[p1].adj), p2);
 		//如果删除成功则继续删除另一个顶点对应的边
 		if (r == 0)
 		{
-			g->NumEdges--;
-			delateEdge(&(g->nodeTable[p2].adj), p1);
-			g->NumEdges--;
+			NumEdges--;
+			delateEdge(&(nodeTable[p2].adj), p1);
+			NumEdges--;
 		}
 	}
 
 	//删除顶点
-	void removeVertex(GraphLink *g, T v)
+	void GraphLink::removeVertex(T v)
 	{
 		//查找顶点下标
-		int p = getVertexIndex(g, v);
+		int p = getVertexIndex(v);
 		//顶点不存在则返回
 		if (p == -1)
 			return;
 		//删除目标顶点以外的顶点与目标顶点之间的边
-		for (int i = 0; i < g->NumVertices; ++i)
+		for (int i = 0; i < NumVertices; ++i)
 		{
 			if (i == p)
 			{
@@ -305,11 +302,11 @@ namespace dataInfo
 			}
 			else
 			{
-				delateEdge(&(g->nodeTable[i].adj), p);
+				delateEdge(&(nodeTable[i].adj), p);
 			}
 		}
 		//删除目标顶点行的所有边
-		Edge *te = g->nodeTable[p].adj;
+		Edge *te = nodeTable[p].adj;
 		Edge *tmp;
 		while (te != NULL)
 		{
@@ -318,18 +315,18 @@ namespace dataInfo
 			free(tmp);
 		}
 		//让被删除顶点那行，指向最后一个顶点那行。
-		g->nodeTable[p].data = g->nodeTable[g->NumVertices - 1].data;
-		g->nodeTable[p].adj = g->nodeTable[g->NumVertices - 1].adj;
+		nodeTable[p].data = nodeTable[NumVertices - 1].data;
+		nodeTable[p].adj = nodeTable[NumVertices - 1].adj;
 		//此处删除的本质为将最后一行提前到p的位置，然后把最后一行删掉。
 		//获取p的边链(值与最后一行的边链相同)
-		tmp = g->nodeTable[p].adj;
+		tmp = nodeTable[p].adj;
 		Edge *q;
 		while (tmp != NULL)
 		{
 			//获取最后一行的边链的边所对应的另一个顶点的边链
-			q = g->nodeTable[tmp->idx].adj;
+			q = nodeTable[tmp->idx].adj;
 			//查找出q与最后一行有关系的边
-			while (q != NULL && q->idx != g->NumVertices - 1)
+			while (q != NULL && q->idx != NumVertices - 1)
 			{
 				q = q->link;
 			}
@@ -339,19 +336,19 @@ namespace dataInfo
 			tmp = tmp->link;
 		}
 		//目前顶点数目减少
-		g->NumVertices--;
+		NumVertices--;
 	}
 
 	//清空图
-	void destroyGraphLink(GraphLink *g)
+	GraphLink::~GraphLink()
 	{
 		//释放所有边的内存空间
 		Edge *t = NULL;
 		Edge *p = NULL;
 		//删除每个顶点的边链
-		for (int i = 0; i < g->NumVertices; ++i)
+		for (int i = 0; i < NumVertices; ++i)
 		{
-			t = g->nodeTable[i].adj;
+			t = nodeTable[i].adj;
 			while (NULL != t)
 			{
 				p = t;
@@ -360,13 +357,13 @@ namespace dataInfo
 			}
 		}
 		//释放所有顶点的内存空间
-		free(g->nodeTable);
-		g->nodeTable = NULL;
-		g->MaxVertices = g->NumVertices = g->NumEdges = 0;
+		free(nodeTable);
+		nodeTable = NULL;
+		MaxVertices = NumVertices = NumEdges = 0;
 	}
 
 	//获取两点之间最短路径：Dijkstra算法
-	void dijkstra(GraphLink *g, T v1, T v2, int mode)
+	void GraphLink::dijkstra(T v1, T v2, int mode)
 	{
 	}
 }

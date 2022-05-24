@@ -3,7 +3,7 @@
 using namespace dataInfo;
 #ifndef _SITE_INFO
 #define _SITE_INFO
-namespace sitInfo
+namespace siteInfo
 {
 	//解析所有站点
 	extern void parseAllSite(GraphLink *g);

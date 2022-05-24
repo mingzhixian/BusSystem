@@ -5,19 +5,21 @@
 namespace dataInfo
 {
     //节点结构
-    typedef struct T
+    class T
     {
+    public:
         string name = "";
         //重载相等操作符
         bool operator==(const T &obj)
         {
             return (name == obj.name);
         }
-    } T;
+    };
 
     //边的结构
-    typedef struct Edge
+    class Edge
     {
+    public:
         //顶点的下标
         int idx;
         //公交车
@@ -29,21 +31,23 @@ namespace dataInfo
         //步行时间
         int walkTime;
         //指向下一个边的指针
-        struct Edge *link;
-    } Edge;
+        Edge *link;
+    };
 
     //顶点的结构
-    typedef struct Vertex
+    class Vertex
     {
+    public:
         //顶点的值
         T data;
         //边
         Edge *adj;
-    } Vertex;
+    };
 
     //图的结构
-    typedef struct GraphLink
+    class GraphLink
     {
+    private:
         //最大节点数目
         int MaxVertices;
         //目前节点数目
@@ -52,46 +56,53 @@ namespace dataInfo
         int NumEdges;
         //顶点的链表
         Vertex *nodeTable;
-    } GraphLink;
 
-    //初始化图
-    extern void initGraphLink(GraphLink *g);
+        //创建边，传入顶点的边链和新边参数，服务于insertEdgeTail函数
+        void createEdgeTail(Edge **e, int idx, string bus[20], int busTime, int walk, int walkTime);
 
-    //显示图
-    extern void showGraphLink(GraphLink *g);
+        //创建边，传入顶点的边链和新边参数，服务于insertEdgeHead函数
+        void createEdgeHead(Edge **e, int p1, int p2, string bus[20], int busTime, int walk, int walkTime);
 
-    //插入顶点
-    extern void insertVertex(GraphLink *g, T v);
+        //获取边
+        Edge *getEdge(T v1, T v2);
 
-    //查找顶点在顶点链表的下标
-    extern int getVertexIndex(GraphLink *g, T v);
+    public:
+        //初始化图
+        GraphLink();
 
-    //获取边
-    extern Edge *getEdge(GraphLink *g, T v1, T v2);
+        //显示图
+        void showGraphLink();
 
-    //插入边关系(尾插）
-    extern void insertEdgeTail(GraphLink *g, T v1, T v2, string bus[20], int busTime, int walk, int walkTime);
+        //插入顶点
+        void insertVertex(T v);
 
-    //插入边关系(头插）
-    extern void insertEdgeHead(GraphLink *g, T v1, T v2, string bus[20], int busTime, int walk, int walkTime);
+        //查找顶点在顶点链表的下标
+        int getVertexIndex(T v);
 
-    //删除边
-    extern void removeEdge(GraphLink *g, T v1, T v2);
+        //插入边关系(尾插）
+        void insertEdgeTail(T v1, T v2, string bus[20], int busTime, int walk, int walkTime);
 
-    //删除顶点
-    extern void removeVertex(GraphLink *g, T v);
+        //插入边关系(头插）
+        void insertEdgeHead(T v1, T v2, string bus[20], int busTime, int walk, int walkTime);
 
-    //清空图
-    extern void destroyGraphLink(GraphLink *g);
+        //删除边
+        void removeEdge(T v1, T v2);
 
-    //获取两点之间最短路径：算法
-    extern void dijkstra(GraphLink *g, T v1, T v2);
+        //删除顶点
+        void removeVertex(T v);
+
+        //获取两点之间最短路径：算法
+        void dijkstra(T v1, T v2, int mode);
+
+        //清空图
+        ~GraphLink();
+    };
 
     //初始化数据,用于建立图
     extern void dataInfo();
 
     //获取程序的内存使用
     extern void GetProcessMemory();
-    
+
 }
 #endif

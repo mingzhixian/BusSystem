@@ -18,7 +18,7 @@ namespace siteInfo
 			//存取站名
 			p->name = siteName;
 			//插入图中
-			insertVertex(g, *p);
+			g->insertVertex(*p);
 			//结束标志
 			if (tmp == '\n')
 				break;
@@ -77,7 +77,7 @@ namespace siteInfo
 				}
 				v1.name = string(site1);
 				v2.name = string(site2);
-				insertEdgeHead(g, v1, v2, bus, bustime, walk, walktime);
+				g->insertEdgeHead(v1, v2, bus, bustime, walk, walktime);
 			}
 		}
 		fclose(f);
