@@ -1,15 +1,9 @@
-#include <iostream>
-#include <string.h>
-#include <malloc.h>
-
-using namespace std;
+#include "public.h"
 
 #ifndef _DATA_INFO
 #define _DATA_INFO
-namespace datainfo
+namespace dataInfo
 {
-    //图文件
-
     //节点结构
     typedef struct T
     {
@@ -91,22 +85,13 @@ namespace datainfo
     extern void destroyGraphLink(GraphLink *g);
 
     //获取两点之间最短路径：算法
-    extern void get(GraphLink *g);
+    extern void dijkstra(GraphLink *g, T v1, T v2);
 
-    // dataInfo主文件
-
-    //初始化数据
-    extern void run();
+    //初始化数据,用于建立图
+    extern void dataInfo();
 
     //获取程序的内存使用
     extern void GetProcessMemory();
-
-    //解析siteinfo文件
-
-    //解析所有站点
-    extern void parseAllSite(GraphLink *g);
-
-    //解析所有站与站之间的关系
-    extern void parseSite(GraphLink *g);
+    
 }
 #endif

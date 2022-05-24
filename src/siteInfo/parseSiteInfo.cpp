@@ -1,5 +1,5 @@
-#include "dataInfo.h"
-namespace datainfo
+#include "siteInfo.h"
+namespace siteInfo
 {
 	FILE *f = fopen("needToSed/src/siteInfo/siteinfo.txt", "r");
 	//获取所有站点
@@ -41,7 +41,7 @@ namespace datainfo
 		{
 			char luName[100] = {0}, site1[100] = {0}, site2[100] = {0};
 			//读取每一路开头的换行符
-			tmp=fgetc(f);
+			tmp = fgetc(f);
 			//判断文件读取完成
 			if (tmp == EOF)
 			{

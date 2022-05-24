@@ -1,6 +1,6 @@
-#include <iostream>
-using namespace std;
-int main(int argc, char const *argv[])
+#include "busSystem.h"
+using namespace busSystem;
+void http()
 {
-	return 0;
+	return;
 }

@@ -1,5 +1,5 @@
 #include "dataInfo.h"
-namespace datainfo
+namespace dataInfo
 {
 	//初始化图
 	void initGraphLink(GraphLink *g)
@@ -365,8 +365,8 @@ namespace datainfo
 		g->MaxVertices = g->NumVertices = g->NumEdges = 0;
 	}
 
-	//获取两点之间最短路径：算法
-	void floyd(GraphLink *g)
+	//获取两点之间最短路径：Dijkstra算法
+	void dijkstra(GraphLink *g, T v1, T v2, int mode)
 	{
 	}
 }

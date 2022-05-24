@@ -1,10 +1,10 @@
 #include "dataInfo.h"
-namespace datainfo
+namespace dataInfo
 {
 	//新建图
 	GraphLink site;
 	//运行
-	void run()
+	void dataInfo()
 	{
 		//初始化图
 		initGraphLink(&site);
