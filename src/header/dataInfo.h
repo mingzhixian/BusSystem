@@ -104,5 +104,6 @@ namespace dataInfo
     //获取程序的内存使用
     extern void GetProcessMemory();
 
+    //堆
 }
 #endif

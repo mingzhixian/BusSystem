@@ -38,7 +38,6 @@ namespace dataInfo
 					i++;
 				}
 				cout << "bustime:" << p->busTime << "walk:" << p->walk << "walktime:" << p->walkTime << " -> ";
-				;
 				p = p->link;
 			}
 			//换行
@@ -365,5 +364,18 @@ namespace dataInfo
 	//获取两点之间最短路径：Dijkstra算法
 	void GraphLink::dijkstra(T v1, T v2, int mode)
 	{
+		//最短路径信息，dst数组存储到各个节点的最短长度，path存储到达该节点的前驱节点。
+		int dst[NumVertices], path[NumVertices];
+		//是否已找到最短路径
+		bool book[NumVertices];
+
+		//初始化
+		Edge *p = nodeTable[0].adj;
+		//打印该顶点每一条边
+		while (NULL != p)
+		{
+
+			p = p->link;
+		}
 	}
 }

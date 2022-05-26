@@ -21,14 +21,20 @@
 ## 项目结构
 
 <pre>
-.                            BusSystem
-├── README.md                   说明文件
-└── src                         源代码
-    ├── dataInfo                    程序内部信息存储
-    ├── http                        http服务器
-    ├── main                        主程序
-    ├── pathCalculate               路径计算
-    └── siteInfo                    站点信息
+.
+├── makefile
+├── out
+│   ├── busSystem
+│   ├── http
+│   └── tmp
+├── README.md
+└── src
+    ├── cache
+    ├── dataInfo
+    ├── header
+    ├── http
+    ├── main
+    └── siteInfo
 </pre>
 
 ## 项目说明

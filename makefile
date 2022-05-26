@@ -1,16 +1,16 @@
-busSystem: start main http run over
+busSystem: start main http over
 	
 #编译开始前操作	
 start:
 	mkdir -p ./out/tmp
-	p=`pwd` && n=$${p//\//\\\/} && sed -i "s/needToSed/$$n/" ./src/dataInfo/parseSiteInfo.cpp
+	p=`pwd` && n=$${p//\//\\\/} && sed -i "s/needToSed/$$n/" ./src/siteInfo/parseSiteInfo.cpp
 
 #编译整个项目
 main:dataInfo.o graph.o parseSiteInfo.o main.o http.o hash.o
 	g++ ./out/tmp/*.o -o ./out/busSystem
 
 #运行程序
-run:
+run:busSystem 
 	./out/busSystem
 
 #建立图
@@ -39,7 +39,7 @@ main.o:
 
 #编译完成后操作
 over:
-	p=`pwd` && n=$${p//\//\\\/} && sed -i "s/$$n/needToSed/" ./src/dataInfo/parseSiteInfo.cpp
+	p=`pwd` && n=$${p//\//\\\/} && sed -i "s/$$n/needToSed/" ./src/siteInfo/parseSiteInfo.cpp
 
 #清理中间文件
 clean:
