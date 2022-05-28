@@ -6,15 +6,29 @@ import ssl
 
 ssl._create_default_https_context = ssl._create_unverified_context
 url = "https://bus.mapbar.com/chongqing/xianlu/"
-urllist = ["502lu", "505lu", "506lu", "507lu", "508lu", "515lu", "518lu", "521lu", "521luhuanxian", "522lu", "533lu", "551lu", "555lu", "556lu", "558lu", "560lu", "562lu",
-           "563lu", "566ludazhan", "570lu", "581lu", "585lu", "588lu", "589lu", "591lu", "592lu", "595lu", "598lu", "598luqujian", "beiqiyinxiangqichegongsitongqinche", "557lu"]
-allSite=[]
-siteInfo=""
+buslist = {}
+allSite = ["as","bs","cs"]
+siteInfo = ""
 print("请耐心等待！")
-for lu in urllist:
+# 爬取公交名称
+request = urllib.request.Request(url)
+request.add_header(
+    "user-agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.88 Safari/537.36")
+request.verify = False
+response2 = urllib.request.urlopen(request)
+soup = BeautifulSoup(response2.read(), "html.parser",
+                     from_encoding="utf-8")
+
+for i in range(3):
+    lis = soup.select(".ChinaTxt")[i].select("dd")[0].find_all("a")
+    for li in lis:
+        buslist[li.get_text()]=li.attrs['href']
+# 查找公交线路
+for lu in buslist.keys():
+    # 打印提示
     print(lu)
-    siteInfo+=("\n"+lu+"\n")
-    request = urllib.request.Request(url + lu)
+    siteInfo += ("\n"+lu+"\n")
+    request = urllib.request.Request(buslist[lu])
     request.add_header(
         "user-agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.88 Safari/537.36")
     request.verify = False
@@ -26,19 +40,25 @@ for lu in urllist:
     for li in lis:
         if li.select("em")[0].get_text() not in allSite:
             allSite.append(li.select("em")[0].get_text())
-        bustime=random.randint(10, 45)
-        walk=random.randint(40, 2000)
-        walktime=int(walk/80)
-        if walk>500:
-            walk=2000
-            walktime=2000
-        siteInfo+=(li.select("em")[0].get_text() +
-                   " <- bustime:"+str(bustime)+" walk:"+str(walk)+" walktime:"+str(walktime)+" -> ")
-    siteInfo+=("\n")
+        bustime = random.randint(10, 45)
+        siteInfo += (li.select("em")[0].get_text() +
+                     " <- "+str(bustime)+" -> ")
+    siteInfo += ("\n")
     time.sleep(3)
+
+# 步行
+walkinfo = ""
+for x in range(80):
+    a = random.randint(0, len(allSite)-1)
+    b = random.randint(0, len(allSite)-1)
+    walk = random.randint(40, 500)
+    walkinfo += "< "+allSite[a]+" - "+str(walk)+" - "+allSite[b]+" >"
+
 file = open("./siteinfo.txt", 'w')
 for site in allSite:
     file.write(site+"  ")
 file.write("\n\n")
 file.write(siteInfo)
+file.write("\n\n")
+file.write(walkinfo)
 print("完成！")

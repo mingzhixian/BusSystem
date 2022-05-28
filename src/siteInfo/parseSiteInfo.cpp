@@ -2,12 +2,28 @@
 namespace siteInfo
 {
 	FILE *f = fopen("needToSed/src/siteInfo/siteinfo.txt", "r");
-	//获取所有站点
+	void parse(GraphLink *g)
+	{
+		char tmp;
+		//获取所有站点
+		parseAllSite(g);
+		//读取换行符
+		fscanf(f, "%c%c", &tmp, &tmp);
+		//获取站点之间的公交信息
+		parseSite(g);
+		//读取换行符
+		fscanf(f, "%c%c", &tmp, &tmp);
+		//获取站点之间走路信息
+		// parseWalk(g);
+		//关闭f
+		fclose(f);
+	}
+
 	void parseAllSite(GraphLink *g)
 	{
 		int i = 0;
 		//存取每个站点名
-		char siteName[40];
+		char siteName[80];
 		char tmp = ' ';
 		T *p = (T *)malloc(sizeof(T));
 		while (true)
@@ -21,21 +37,25 @@ namespace siteInfo
 			g->insertVertex(*p);
 			//结束标志
 			if (tmp == '\n')
-				break;
-			else
+			{
 				//文件读取指针后退一步
 				fseek(f, -1, SEEK_CUR);
+				break;
+			}
+			else
+			{
+				//文件读取指针后退一步
+				fseek(f, -1, SEEK_CUR);
+			}
 		}
-		//读取换行符，使指针移动至站点与站点之间信息的位置,在第一行所有站点后有两个换行符
-		fscanf(f, "%c", &tmp);
 		free(p);
 	}
-	//获取站点之间的公交信息
+
 	void parseSite(GraphLink *g)
 	{
 		char tmp = ' ';
 		string bus[20];
-		int bustime, walk, walktime;
+		int bustime, walk = 10000, walktime = 10000;
 		T v1, v2;
 		while (true)
 		{
@@ -52,14 +72,16 @@ namespace siteInfo
 			bus[0] = luName;
 			while (true)
 			{
+				//第一次读取
 				if (strlen(site2) == 0)
 				{
-					fscanf(f, "%s <- bustime:%d walk:%d walktime:%d -> %s", site1, &bustime, &walk, &walktime, site2);
+					fscanf(f, "%s <- %d -> %s", site1, &bustime, site2);
 				}
+				//之后的读取
 				else
 				{
 					strcpy(site1, site2);
-					fscanf(f, " <- bustime:%d walk:%d walktime:%d ->%c%c", &bustime, &walk, &walktime, &tmp, &tmp);
+					fscanf(f, " <- %d ->%c%c", &bustime, &tmp, &tmp);
 					if (tmp != '\n')
 					{
 						//文件读取指针后退一步
@@ -68,6 +90,7 @@ namespace siteInfo
 					}
 					else
 					{
+						//如果是最后一个则将site2置空
 						memset(site2, 0, 40);
 					}
 				}
@@ -80,6 +103,29 @@ namespace siteInfo
 				g->insertEdgeHead(v1, v2, bus, bustime, walk, walktime);
 			}
 		}
-		fclose(f);
+	}
+
+	void parseWalk(GraphLink *g)
+	{
+		T v1, v2;
+		int walk;
+		while (true)
+		{
+			char site1[100] = {0}, site2[100] = {0}, tmp = 0;
+			fscanf(f, "%c", &tmp);
+			//结束标志
+			if (tmp == '\n')
+			{
+				break;
+			}
+			else
+			{
+				fseek(f, -1, SEEK_CUR);
+				fscanf(f, "< %s - %d - %s >", site1, walk, site2);
+				v1.name = string(site1);
+				v2.name = string(site2);
+				g->setEdgeWalk(v1, v2, walk, (int)(walk / 1.2 / 60));
+			}
+		}
 	}
 }

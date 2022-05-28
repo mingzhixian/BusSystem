@@ -5,7 +5,7 @@ namespace dataInfo
 	GraphLink::GraphLink()
 	{
 		//初始化最大节点个数以及当前节点个数、当前边数
-		MaxVertices = 300;
+		MaxVertices = 3000;
 		NumVertices = NumEdges = 0;
 
 		//分配顶点链表空间
@@ -37,7 +37,7 @@ namespace dataInfo
 					cout << p->bus[i] << " ";
 					i++;
 				}
-				cout << "bustime:" << p->busTime << "walk:" << p->walk << "walktime:" << p->walkTime << " -> ";
+				cout << "bustime:" << p->busTime << " walk: " << p->walk << " walktime: " << p->walkTime << " -> ";
 				p = p->link;
 			}
 			//换行
@@ -226,6 +226,35 @@ namespace dataInfo
 		}
 	}
 
+	//更新边关系（不需要更新的值置为NULL即可）
+	void GraphLink::setEdgeWalk(T v1, T v2, int walk, int walkTime)
+	{
+		//查找顶点在图中的下标
+		int p1 = getVertexIndex(v1);
+		int p2 = getVertexIndex(v2);
+		//顶点不存在则退出
+		if (p1 == -1 || p2 == -1)
+			return;
+
+		Edge *edge1 = getEdge(v1, v2);
+		Edge *edge2 = getEdge(v2, v1);
+
+		//如果存在公交线路
+		if (edge1 != NULL && edge2 != NULL)
+		{
+			edge1->walk = walk == NULL ? edge1->walk : walk;
+			edge2->walk = walk == NULL ? edge2->walk : walk;
+			edge1->walkTime = walkTime == NULL ? edge1->walkTime : walkTime;
+			edge2->walkTime = walkTime == NULL ? edge2->walkTime : walkTime;
+		}
+		//如果两站之间不存在公交线路
+		else
+		{
+			string bus[20];
+			insertEdgeHead(v1, v2, bus, 10000, walk, walkTime);
+		};
+	}
+
 	//删除边，服务于removeEdge函数
 	int delateEdge(Edge **p, int i)
 	{
@@ -364,8 +393,9 @@ namespace dataInfo
 	//获取两点之间最短路径：Dijkstra算法
 	void GraphLink::dijkstra(T v1, T v2, int mode)
 	{
-		//最短路径信息，dst数组存储到各个节点的最短长度，path存储到达该节点的前驱节点。
-		int dst[NumVertices], path[NumVertices];
+		// s存储已求出最短路径的顶点(以及相应的最短路径长度)，u记录还未求出最短路径的顶点(以及该顶点到起点s的距离),isCheck记录不在u中已经进入s的顶点，已经进入s则为true
+		int s[NumVertices], u[NumVertices];
+		bool isCheck[NumVertices];
 		//是否已找到最短路径
 		bool book[NumVertices];
 

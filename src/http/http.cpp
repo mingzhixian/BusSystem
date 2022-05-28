@@ -1,6 +1,8 @@
-#include "busSystem.h"
-using namespace busSystem;
-void http()
+#include "http.h"
+namespace http
 {
-	return;
+	void httpRun()
+	{
+		return;
+	}
 }

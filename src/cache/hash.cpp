@@ -82,7 +82,7 @@ namespace cache
 				p = p->next;
 			}
 			//找不到该实例则新建一个
-			HashItem *p = new HashItem(v1, v2, s, m, data[index]->next);
+			p = new HashItem(v1, v2, s, m, data[index]->next);
 			data[index]->next = p;
 			return 1;
 		}

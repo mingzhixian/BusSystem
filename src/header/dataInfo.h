@@ -85,6 +85,9 @@ namespace dataInfo
         //插入边关系(头插）
         void insertEdgeHead(T v1, T v2, string bus[20], int busTime, int walk, int walkTime);
 
+        //更新边关系
+        void setEdgeWalk(T v1, T v2, int walk, int walkTime);
+
         //删除边
         void removeEdge(T v1, T v2);
 
@@ -99,7 +102,7 @@ namespace dataInfo
     };
 
     //初始化数据,用于建立图
-    extern void dataInfo();
+    extern void dataInfoRun();
 
     //获取程序的内存使用
     extern void GetProcessMemory();

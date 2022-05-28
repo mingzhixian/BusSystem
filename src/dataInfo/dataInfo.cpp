@@ -6,19 +6,16 @@ namespace dataInfo
 	//新建图
 	GraphLink site;
 	//运行
-	void dataInfo()
+	void dataInfoRun()
 	{
-		//解析站点，并作为顶点插入图
-		parseAllSite(&site);
-
-		//解析所有站点之间的信息，并作为边插入图
-		parseSite(&site);
+		//解析文件信息
+		parse(&site);
 
 		//测试用--显示图
 		site.showGraphLink();
 
 		//清空图--在linux下效果不会明显显示，因为数据量较小，系统不会真正释放，具体参见https://blog.csdn.net/weixin_30819085/article/details/101325304
-		site.~GraphLink();
+		//site.~GraphLink();
 	}
 
 	//获取程序的内存使用
