@@ -390,22 +390,194 @@ namespace dataInfo
 		MaxVertices = NumVertices = NumEdges = 0;
 	}
 
-	//获取两点之间最短路径：Dijkstra算法
-	void GraphLink::dijkstra(T v1, T v2, int mode)
+	// Dijkstra算法
+	string *GraphLink::dijkstra(T v1, int mode)
 	{
-		// s存储已求出最短路径的顶点(以及相应的最短路径长度)，u记录还未求出最短路径的顶点(以及该顶点到起点s的距离),isCheck记录不在u中已经进入s的顶点，已经进入s则为true
-		int s[NumVertices], u[NumVertices];
-		bool isCheck[NumVertices];
-		//是否已找到最短路径
-		bool book[NumVertices];
+		// s存储已求出最短路径的顶点(以及相应的最短路径长度)，u记录还未求出最短路径的顶点(以及该顶点到起点s的距离),isS记录已经进入s的顶点，已经进入s则为true,p记录当前路径下到达他的上一个节点
+		int s[NumVertices], u[NumVertices], p[NumVertices];
+		bool isS[NumVertices] = {false};
+		for (int i = 0; i < NumVertices; i++)
+		{
+			s[i] = 10000;
+			u[i] = 10000;
+			p[i] = 10000;
+		}
 
 		//初始化
-		Edge *p = nodeTable[0].adj;
-		//打印该顶点每一条边
-		while (NULL != p)
+		//查找开始节点的下标
+		int p1 = getVertexIndex(v1);
+		isS[p1] = true;
+		s[p1] = 0;
+		p[p1] = p1;
+		Edge *q = nodeTable[p1].adj;
+		//寻找该顶点每一条边
+		while (NULL != q)
 		{
+			u[q->idx] = minTime(q->busTime, q->walkTime, mode);
+			p[q->idx] = p1;
+			q = q->link;
+		}
+		//循环遍历,循环NumVertices-1次，找出除初识节点的所有节点
+		for (int i = 0; i < NumVertices - 1; i++)
+		{
+			//寻找u中最小顶点
+			int mini = 0, tmp_minTime = 10000;
+			for (int z = 0; z < NumVertices; z++)
+			{
+				if (u[z] < tmp_minTime && !isS[z])
+				{
+					tmp_minTime = u[z];
+					mini = z;
+				}
+			}
+			s[mini] = tmp_minTime;
+			isS[mini] = true;
+			//开始检查最小点所连的边
+			q = nodeTable[mini].adj;
+			//寻找该顶点每一条边
+			while (NULL != q)
+			{
+				//没有在s中的
+				if (!isS[q->idx])
+				{
+					int time = minTime(q->busTime, q->walkTime, mode) + tmp_minTime;
+					if (u[q->idx] > time)
+					{
+						u[q->idx] = time;
+						p[q->idx] = mini;
+					}
+				}
+				q = q->link;
+			}
+		}
+		//返回结果
+		string *finish = new string[NumVertices];
+		for (int i = 0; i < NumVertices; i++)
+		{
+			finish[i] = "";
+			//排除本站到本站
+			if (i == p1)
+			{
+				continue;
+			}
+			//找出总起点到i站的最短路径（倒序，path[0]为终点）
+			int z = i, path[NumEdges], changeSite = 0;
+			while (z != p1)
+			{
+				path[changeSite++] = z;
+				z = p[z];
+			}
+			path[changeSite] = z;
+			//组装为json数据
+			string tmpFinish = "{\"route\":[";
+			int tmpWalk = 0, tmpWalkTime = 0, tmpBusTime = 0;
+			//循环至到达终点，path[0]为终点。
+			//上一站的公交车和本站的公交车
+			string busOld = "", busNow = "";
+			while (changeSite != 0)
+			{
+				//获取本站到下一站的边
+				Edge *q = getEdge(nodeTable[path[changeSite]].data, nodeTable[path[changeSite - 1]].data);
+				//检查上一站的公交能否到达下一站
+				busNow = "";
+				//步行情况
+				if (q->busTime == 10000)
+				{
+					tmpWalk += q->walk;
+					tmpWalkTime += q->walkTime;
+					busNow = -1;
+				}
+				//坐车情况
+				else if (q->walkTime == 10000)
+				{
+					while (q->bus[i] != "")
+					{
+						if (busOld == q->bus[i])
+						{
+							busNow = busOld;
+						}
+						i++;
+					};
+					//上一站的公交不能到达下一站，则换乘
+					if (busNow == "")
+					{
+						busNow = q->bus[0];
+					}
+					tmpBusTime += q->busTime;
+				}
+				//既可以坐车也可以走路情况
+				else
+				{
+					//时间最短优先
+					if (mode == 1)
+					{
+						tmpWalk += q->walk;
+						tmpWalkTime += q->walkTime;
+						busNow = -1;
+					}
+					//步行最少优先
+					else
+					{
+						while (q->bus[i] != "")
+						{
+							if (busOld == q->bus[i])
+							{
+								busNow = busOld;
+							}
+							i++;
+						};
+						//上一站的公交不能到达下一站，则换乘
+						if (busNow == "")
+						{
+							busNow = q->bus[0];
+						}
+						tmpBusTime += q->busTime;
+					}
+				}
 
-			p = p->link;
+				//组装数据
+				tmpFinish += "\"" + busNow + " ( " + nodeTable[path[changeSite]].data.name + " - " + nodeTable[path[changeSite - 1]].data.name + " )\"";
+				changeSite--;
+				//最后一个不加逗号
+				if (changeSite != 0)
+				{
+					tmpFinish += ",";
+				}
+			}
+			tmpFinish += "],\"meter\":\"" + to_string(tmpWalk) + "\",\"busTime\":\"" + to_string(tmpBusTime) + "\",\"walkTime\":\"" + to_string(tmpWalkTime) + "\"}";
+			//添加到返回值中
+			finish[i] = tmpFinish;
+		}
+		return finish;
+	}
+
+	//获取两点之间最短路径
+	string GraphLink::getShortest(T v1, T v2, int mode)
+	{
+		//利用dijkstra算法求出起点到所有节点的最短路径
+		string *f = dijkstra(v1, mode);
+		//加入缓存
+		//获取起点到终点的最短路径
+		int p2 = getVertexIndex(v2);
+		return f[p2];
+	}
+
+	//模式选择，服务于最短路径算法
+	inline int GraphLink::minTime(int busTime, int walkTime, int mode)
+	{
+		//只有公交或只有步行时
+		if (busTime == 10000 || walkTime == 10000)
+		{
+			return busTime > walkTime ? walkTime : busTime;
+		}
+		//又有公交又有步行时
+		if (mode == 1)
+		{
+			return busTime > walkTime ? walkTime : busTime;
+		}
+		else if (mode == 2)
+		{
+			return busTime;
 		}
 	}
 }

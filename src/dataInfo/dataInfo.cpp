@@ -12,10 +12,14 @@ namespace dataInfo
 		parse(&site);
 
 		//测试用--显示图
-		site.showGraphLink();
+		// site.showGraphLink();
 
+		T v1, v2;
+		v1.name = "D";
+		v2.name = "B";
+		cout << site.getShortest(v1, v2, 1) << endl;
 		//清空图--在linux下效果不会明显显示，因为数据量较小，系统不会真正释放，具体参见https://blog.csdn.net/weixin_30819085/article/details/101325304
-		//site.~GraphLink();
+		site.~GraphLink();
 	}
 
 	//获取程序的内存使用

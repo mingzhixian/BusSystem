@@ -66,6 +66,12 @@ namespace dataInfo
         //获取边
         Edge *getEdge(T v1, T v2);
 
+        //模式选择，服务于最短路径算法
+        inline int minTime(int busTime, int walkTime, int mode);
+
+        // dijkstra算法，服务于getShortest
+        string *dijkstra(T v1, int mode);
+
     public:
         //初始化图
         GraphLink();
@@ -94,9 +100,8 @@ namespace dataInfo
         //删除顶点
         void removeVertex(T v);
 
-        //获取两点之间最短路径：算法
-        void dijkstra(T v1, T v2, int mode);
-
+        //获取两点之间最短路径
+        string getShortest(T v1, T v2, int mode);
         //清空图
         ~GraphLink();
     };

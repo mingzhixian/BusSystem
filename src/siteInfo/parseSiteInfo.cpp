@@ -14,7 +14,7 @@ namespace siteInfo
 		//读取换行符
 		fscanf(f, "%c%c", &tmp, &tmp);
 		//获取站点之间走路信息
-		// parseWalk(g);
+		parseWalk(g);
 		//关闭f
 		fclose(f);
 	}
@@ -60,15 +60,22 @@ namespace siteInfo
 		while (true)
 		{
 			char luName[100] = {0}, site1[100] = {0}, site2[100] = {0};
-			//读取每一路开头的换行符
-			tmp = fgetc(f);
 			//判断文件读取完成
-			if (tmp == EOF)
+			fscanf(f, "%c%c", &tmp, &tmp);
+			if (tmp == '\n')
 			{
+				//文件读取指针后退两步
+				fseek(f, -2, SEEK_CUR);
 				return;
 			}
-			//读取公交的名字和换行符
-			fscanf(f, "%s%c", luName, &tmp);
+			else
+			{
+				//文件读取指针后退一步
+				fseek(f, -1, SEEK_CUR);
+				//读取公交的名字和换行符
+				fscanf(f, "%s%c", luName, &tmp);
+			}
+
 			bus[0] = luName;
 			while (true)
 			{
@@ -109,6 +116,7 @@ namespace siteInfo
 	{
 		T v1, v2;
 		int walk;
+		int ii = 0;
 		while (true)
 		{
 			char site1[100] = {0}, site2[100] = {0}, tmp = 0;
@@ -116,15 +124,17 @@ namespace siteInfo
 			//结束标志
 			if (tmp == '\n')
 			{
-				break;
+				return;
 			}
 			else
 			{
 				fseek(f, -1, SEEK_CUR);
-				fscanf(f, "< %s - %d - %s >", site1, walk, site2);
+				fscanf(f, "< %s - %d - %s >", site1, &walk, site2);
 				v1.name = string(site1);
 				v2.name = string(site2);
-				g->setEdgeWalk(v1, v2, walk, (int)(walk / 1.2 / 60));
+				//g->setEdgeWalk(v1, v2, walk, (int)(walk / 1.2 / 60));
+				//测试用
+				g->setEdgeWalk(v1, v2, walk, walk);
 			}
 		}
 	}
