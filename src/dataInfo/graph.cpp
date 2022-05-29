@@ -1,5 +1,6 @@
 #include "dataInfo.h"
-namespace dataInfo
+using namespace dataInfo;
+namespace graph
 {
 	//初始化图
 	GraphLink::GraphLink()
@@ -391,7 +392,7 @@ namespace dataInfo
 	}
 
 	// Dijkstra算法
-	string *GraphLink::dijkstra(T v1, int mode)
+	string *GraphLink::dijkstra(T v1, int mode, Hash *cache)
 	{
 		// s存储已求出最短路径的顶点(以及相应的最短路径长度)，u记录还未求出最短路径的顶点(以及该顶点到起点s的距离),isS记录已经进入s的顶点，已经进入s则为true,p记录当前路径下到达他的上一个节点
 		int s[NumVertices], u[NumVertices], p[NumVertices];
@@ -547,16 +548,17 @@ namespace dataInfo
 			tmpFinish += "],\"meter\":\"" + to_string(tmpWalk) + "\",\"busTime\":\"" + to_string(tmpBusTime) + "\",\"walkTime\":\"" + to_string(tmpWalkTime) + "\"}";
 			//添加到返回值中
 			finish[i] = tmpFinish;
+			//加入缓存
+			cache->addItem(nodeTable[p1].data, nodeTable[i].data, mode, tmpFinish);
 		}
 		return finish;
 	}
 
 	//获取两点之间最短路径
-	string GraphLink::getShortest(T v1, T v2, int mode)
+	string GraphLink::getShortest(T v1, T v2, int mode, Hash *cache)
 	{
 		//利用dijkstra算法求出起点到所有节点的最短路径
-		string *f = dijkstra(v1, mode);
-		//加入缓存
+		string *f = dijkstra(v1, mode, cache);
 		//获取起点到终点的最短路径
 		int p2 = getVertexIndex(v2);
 		return f[p2];

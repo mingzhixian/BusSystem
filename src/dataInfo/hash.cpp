@@ -1,5 +1,6 @@
 #include "public.h"
-#include "cache.h"
+#include "dataInfo.h"
+using namespace dataInfo;
 namespace cache
 {
 	//销毁哈希表

@@ -1,5 +1,6 @@
 #include "dataInfo.h"
-namespace dataInfo
+using namespace dataInfo;
+namespace heap
 {
 	template <typename E>
 	class heap
