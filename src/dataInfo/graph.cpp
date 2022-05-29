@@ -460,6 +460,7 @@ namespace dataInfo
 			{
 				continue;
 			}
+
 			//找出总起点到i站的最短路径（倒序，path[0]为终点）
 			int z = i, path[NumEdges], changeSite = 0;
 			while (z != p1)
@@ -490,13 +491,14 @@ namespace dataInfo
 				//坐车情况
 				else if (q->walkTime == 10000)
 				{
-					while (q->bus[i] != "")
+					int tmpI=0;
+					while (q->bus[tmpI] != "")
 					{
-						if (busOld == q->bus[i])
+						if (busOld == q->bus[tmpI])
 						{
 							busNow = busOld;
 						}
-						i++;
+						tmpI++;
 					};
 					//上一站的公交不能到达下一站，则换乘
 					if (busNow == "")
@@ -518,13 +520,14 @@ namespace dataInfo
 					//步行最少优先
 					else
 					{
-						while (q->bus[i] != "")
+						int tmpI = 0;
+						while (q->bus[tmpI] != "")
 						{
-							if (busOld == q->bus[i])
+							if (busOld == q->bus[tmpI])
 							{
 								busNow = busOld;
 							}
-							i++;
+							tmpI++;
 						};
 						//上一站的公交不能到达下一站，则换乘
 						if (busNow == "")
