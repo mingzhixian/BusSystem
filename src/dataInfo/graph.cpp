@@ -1,6 +1,5 @@
 #include "dataInfo.h"
-using namespace dataInfo;
-namespace graph
+namespace dataInfo
 {
 	//初始化图
 	GraphLink::GraphLink()

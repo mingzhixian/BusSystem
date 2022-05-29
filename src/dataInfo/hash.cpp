@@ -1,7 +1,6 @@
 #include "public.h"
 #include "dataInfo.h"
-using namespace dataInfo;
-namespace cache
+namespace dataInfo
 {
 	//销毁哈希表
 	Hash::~Hash()

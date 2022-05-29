@@ -1,7 +1,7 @@
 #include "siteInfo.h"
 namespace siteInfo
 {
-	FILE *f = fopen("/home/kic/Code/BusSystem/src/siteInfo/siteinfo.txt", "r");
+	FILE *f = fopen("needToSed/src/siteInfo/siteinfo.txt", "r");
 	void parse(GraphLink *g)
 	{
 		char tmp;
