@@ -9,12 +9,10 @@ namespace dataInfo
 		{
 			data[i] = new int[2];
 		}
-		site = new int[num];
 		for (int i = 0; i < num; i++)
 		{
 			data[i][0] = h[i];
 			data[i][1] = i;
-			site[i] = i;
 		}
 		for (int i = num / 2 - 1; i >= 0; i--)
 			siftDown(i);
@@ -22,9 +20,6 @@ namespace dataInfo
 	//交换值
 	inline void Heap::swap(int i, int j)
 	{
-		int tmp2 = site[data[i][1]];
-		site[data[i][1]] = site[j];
-		site[data[j][1]] = tmp2;
 		int *tmp1 = data[i];
 		data[i] = data[j];
 		data[j] = tmp1;
@@ -57,19 +52,6 @@ namespace dataInfo
 			swap(pos, parent(pos));
 			pos = parent(pos);
 		}
-	}
-	//更新
-	void Heap::update(int i, int d)
-	{
-		for (int ii = 0; ii < num; ii++)
-		{
-			cout << site[ii];
-		}
-		cout << endl;
-		int pos = site[i];
-		data[pos][0] = d;
-		siftUp(pos);
-		siftDown(pos);
 	}
 	//判断是否为叶节点
 	inline bool Heap::isLeaf(int pos)

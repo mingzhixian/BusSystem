@@ -18,6 +18,6 @@ namespace busDaemon
 	//处理信号
 	extern void daemonHandler();
 	//解析处理请求并返回结果
-	extern string handleRequest(char *req);
+	extern void handleRequest(char *req);
 };
 #endif

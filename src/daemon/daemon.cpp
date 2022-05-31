@@ -3,15 +3,13 @@ namespace busDaemon
 {
 	GraphLink *site;
 	Hash *cache;
-	int fdIn;
-	int fdOut;
 
 	void daemonRun(GraphLink *s, Hash *c)
 	{
 		//全局化常用参数
 		site = s;
 		cache = c;
-		//启动守护进程，关闭主进程
+		/* //启动守护进程，关闭主进程
 		pid_t pid = -1;
 		//创建子进程
 		pid = fork();
@@ -43,18 +41,18 @@ namespace busDaemon
 		//关闭文件描述符
 		close(STDIN_FILENO);
 		close(STDOUT_FILENO);
-		close(STDERR_FILENO);
+		close(STDERR_FILENO); */
+
 		//打开监听信号程序
 		daemonHandler();
 	}
 
 	void daemonHandler()
 	{
+		//建立读取管道
 		char fifoIn[] = "/tmp/BusSystemFifoIn";
-		char fifoOut[] = "/tmp/BusSystemFifoOut";
 		//判断fifo文件是否存在
 		int ret1 = access(fifoIn, F_OK);
-		int ret2 = access(fifoOut, F_OK);
 		//若fifo不存在就创建fifo
 		if (ret1 == -1)
 		{
@@ -66,45 +64,28 @@ namespace busDaemon
 				exit(1);
 			}
 		}
-		if (ret2 == -1)
-		{
-			int r = mkfifo(fifoOut, 0664);
-			//判断文件是否创建成功
-			if (r == -1)
-			{
-				perror("创建管道失败");
-				exit(1);
-			}
-		}
 		//打开文件
-		fdIn = open(fifoIn, O_RDWR);
-		fdOut = open(fifoOut, O_WRONLY);
+		int fdIn = open(fifoIn, O_RDWR);
 		if (fdIn == -1)
 		{
 			perror("打开管道失败");
 			exit(1);
 		}
-		if (fdOut == -1)
-		{
-			perror("打开管道失败");
-			exit(1);
-		}
 		//不断读取fifo中的数据
+		char *req;
 		while (true)
 		{
-			char req[300];
-			read(fdIn, req, 300);
 			//新开线程处理请求
-			handleRequest(req);
-			// thread tmpThread(handleRequest, req);
+			req = new char[10000];
+			memset(req, 0, 10000);
+			read(fdIn, req, 10000);
+			thread tmpThread(handleRequest, req);
+			tmpThread.detach();
 		}
 	}
-
-	string handleRequest(char *req)
+	
+	void handleRequest(char *req)
 	{
-		char tmp1[1000];
-		strcpy(tmp1, req);
-		write(fdOut, tmp1, 1000);
 		//解析请求
 		const char *rule = "{\"id\":\"%[^\"]\",\"source\":\"%[^\"]\",\"purpose\":\"%[^\"]\",\"mode\":\"%[^\"]\"}";
 		char source[100];
@@ -125,14 +106,34 @@ namespace busDaemon
 			tmpAnswer1 = site->getShortest(v1, v2, mode, cache);
 		}
 		//转换为char数组
-		char tmpAnswer2[1000];
+		char tmpAnswer2[10000];
 		strcpy(tmpAnswer2, tmpAnswer1.c_str());
 		//添加id信息，用于客户端区分不同请求的答案
 		sscanf(tmpAnswer2, "{%s", tmpAnswer2);
-		char answer[1000] = "{\"id\":\"";
+		char answer[10000] = "{\"id\":\"";
 		strcat(answer, tmpId);
 		strcat(answer, "\",");
 		strcat(answer, tmpAnswer2);
-		write(fdOut, answer, 1000);
+		//打开管道
+		char fifoOut[] = "/tmp/BusSystemFifoOut";
+		int ret2 = access(fifoOut, F_OK);
+		if (ret2 == -1)
+		{
+			int r = mkfifo(fifoOut, 0664);
+			//判断文件是否创建成功
+			if (r == -1)
+			{
+				perror("创建管道失败");
+				exit(1);
+			}
+		}
+		int fdOut = open(fifoOut, O_WRONLY);
+		if (fdOut == -1)
+		{
+			perror("打开管道失败");
+			exit(1);
+		}
+		delete req;
+		write(fdOut, answer, 10000);
 	}
 }

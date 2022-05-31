@@ -154,7 +154,6 @@ namespace dataInfo
     {
     private:
         int **data; //数组，用于存放数据
-        int *site;  //数组，存放数据位置
         int num;    //堆里面的元素数量
 
         //交换值
@@ -179,8 +178,6 @@ namespace dataInfo
         Heap(const int h[], int n);
         //返回堆的大小
         int size() const;
-        //更新
-        void update(int i, int d);
         //移除根节点
         int *removeFirst();
         //打印

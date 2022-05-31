@@ -402,8 +402,6 @@ namespace dataInfo
 			u[i] = 10000;
 			p[i] = 10000;
 		}
-		//堆
-		// Heap h(u, NumVertices);
 		//初始化
 		//查找开始节点的下标
 		int p1 = getVertexIndex(v1);
@@ -415,7 +413,6 @@ namespace dataInfo
 		while (NULL != q)
 		{
 			u[q->idx] = minTime(q->busTime, q->walkTime, mode);
-			// h.update(q->idx, minTime(q->busTime, q->walkTime, mode));
 			p[q->idx] = p1;
 			q = q->link;
 		}
@@ -423,20 +420,12 @@ namespace dataInfo
 		for (int i = 0; i < NumVertices - 1; i++)
 		{
 			//寻找u中最小顶点
-			int mini = 0, tmp_minTime = 10000;
-			for (int z = 0; z < NumVertices; z++)
-			{
-				if (u[z] < tmp_minTime && !isS[z])
-				{
-					tmp_minTime = u[z];
-					mini = z;
-				}
-			}
-			/* int *tmpH = h.removeFirst();
-			cout << mini << "  " << tmpH[1] << endl;
-			cout << tmp_minTime << "  " << tmpH[0] << endl;
-			cout << endl; */
-			s[mini] = tmp_minTime;
+			Heap h(u, NumVertices);
+			int *tmpMini = h.removeFirst();
+			int mini = tmpMini[1];
+			cout << endl;
+			s[mini] = tmpMini[0];
+			u[mini] = 10000;
 			isS[mini] = true;
 			//开始检查最小点所连的边
 			q = nodeTable[mini].adj;
@@ -446,13 +435,10 @@ namespace dataInfo
 				//没有在s中的
 				if (!isS[q->idx])
 				{
-					int time = minTime(q->busTime, q->walkTime, mode) + tmp_minTime;
+					int time = minTime(q->busTime, q->walkTime, mode) + tmpMini[0];
 					if (u[q->idx] > time)
 					{
 						u[q->idx] = time;
-						/* cout << "update:" << q->idx << "  :" << time << endl;
-						h.update(q->idx, time);
-						h.print(); */
 						p[q->idx] = mini;
 					}
 				}
@@ -478,6 +464,7 @@ namespace dataInfo
 				z = p[z];
 			}
 			path[changeSite] = z;
+
 			//组装为json数据
 			string tmpFinish = "{\"route\":[";
 			int tmpWalk = 0, tmpWalkTime = 0, tmpBusTime = 0;
@@ -524,7 +511,7 @@ namespace dataInfo
 					{
 						tmpWalk += q->walk;
 						tmpWalkTime += q->walkTime;
-						busNow ="-1";
+						busNow = "-1";
 					}
 					//步行最少优先
 					else
@@ -546,7 +533,6 @@ namespace dataInfo
 						tmpBusTime += q->busTime;
 					}
 				}
-
 				//组装数据
 				tmpFinish += "{\"bus\":\"" + busNow + "\",\"source\":\"" + nodeTable[path[changeSite]].data.name + "\",\"purpose\":\"" + nodeTable[path[changeSite - 1]].data.name + "\"}";
 				changeSite--;
@@ -588,7 +574,7 @@ namespace dataInfo
 		{
 			return busTime > walkTime ? walkTime : busTime;
 		}
-		else if (mode == 2)
+		else
 		{
 			return busTime;
 		}
