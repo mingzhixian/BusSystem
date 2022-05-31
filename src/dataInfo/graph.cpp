@@ -402,7 +402,8 @@ namespace dataInfo
 			u[i] = 10000;
 			p[i] = 10000;
 		}
-
+		//堆
+		// Heap h(u, NumVertices);
 		//初始化
 		//查找开始节点的下标
 		int p1 = getVertexIndex(v1);
@@ -414,6 +415,7 @@ namespace dataInfo
 		while (NULL != q)
 		{
 			u[q->idx] = minTime(q->busTime, q->walkTime, mode);
+			// h.update(q->idx, minTime(q->busTime, q->walkTime, mode));
 			p[q->idx] = p1;
 			q = q->link;
 		}
@@ -430,6 +432,10 @@ namespace dataInfo
 					mini = z;
 				}
 			}
+			/* int *tmpH = h.removeFirst();
+			cout << mini << "  " << tmpH[1] << endl;
+			cout << tmp_minTime << "  " << tmpH[0] << endl;
+			cout << endl; */
 			s[mini] = tmp_minTime;
 			isS[mini] = true;
 			//开始检查最小点所连的边
@@ -444,6 +450,9 @@ namespace dataInfo
 					if (u[q->idx] > time)
 					{
 						u[q->idx] = time;
+						/* cout << "update:" << q->idx << "  :" << time << endl;
+						h.update(q->idx, time);
+						h.print(); */
 						p[q->idx] = mini;
 					}
 				}
@@ -486,12 +495,12 @@ namespace dataInfo
 				{
 					tmpWalk += q->walk;
 					tmpWalkTime += q->walkTime;
-					busNow = -1;
+					busNow = "-1";
 				}
 				//坐车情况
 				else if (q->walkTime == 10000)
 				{
-					int tmpI=0;
+					int tmpI = 0;
 					while (q->bus[tmpI] != "")
 					{
 						if (busOld == q->bus[tmpI])
@@ -515,7 +524,7 @@ namespace dataInfo
 					{
 						tmpWalk += q->walk;
 						tmpWalkTime += q->walkTime;
-						busNow = -1;
+						busNow ="-1";
 					}
 					//步行最少优先
 					else
@@ -539,7 +548,7 @@ namespace dataInfo
 				}
 
 				//组装数据
-				tmpFinish += "\"" + busNow + " ( " + nodeTable[path[changeSite]].data.name + " - " + nodeTable[path[changeSite - 1]].data.name + " )\"";
+				tmpFinish += "{\"bus\":\"" + busNow + "\",\"source\":\"" + nodeTable[path[changeSite]].data.name + "\",\"purpose\":\"" + nodeTable[path[changeSite - 1]].data.name + "\"}";
 				changeSite--;
 				//最后一个不加逗号
 				if (changeSite != 0)

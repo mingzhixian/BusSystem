@@ -5,7 +5,6 @@
 namespace dataInfo
 {
     class Hash;
-    class Heap;
     //节点结构
     class T
     {
@@ -149,5 +148,44 @@ namespace dataInfo
         //查询一个实例，找不到返回空HashItem
         HashItem findItem(T v1, T v2);
     };
+
+    //堆
+    class Heap
+    {
+    private:
+        int **data; //数组，用于存放数据
+        int *site;  //数组，存放数据位置
+        int num;    //堆里面的元素数量
+
+        //交换值
+        inline void swap(int i, int j);
+        //判断大小-小根堆
+        inline bool prior(int *a, int *b);
+        //向下递归
+        void siftDown(int pos);
+        //上溯
+        void siftUp(int pos);
+        //判断是否为叶节点
+        inline bool isLeaf(int pos);
+        //返回左节点
+        inline int leftchild(int pos);
+        //返回右节点
+        inline int rightchild(int pos);
+        //返回父节点
+        inline int parent(int pos);
+
+    public:
+        //构造函数
+        Heap(const int h[], int n);
+        //返回堆的大小
+        int size() const;
+        //更新
+        void update(int i, int d);
+        //移除根节点
+        int *removeFirst();
+        //打印
+        void print();
+    };
+
 }
 #endif

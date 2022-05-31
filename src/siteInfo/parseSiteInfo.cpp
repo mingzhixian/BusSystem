@@ -132,9 +132,9 @@ namespace siteInfo
 				fscanf(f, "< %s - %d - %s >", site1, &walk, site2);
 				v1.name = string(site1);
 				v2.name = string(site2);
-				//g->setEdgeWalk(v1, v2, walk, (int)(walk / 1.2 / 60));
+				g->setEdgeWalk(v1, v2, walk, (int)(walk / 1.2 / 60));
 				//测试用
-				g->setEdgeWalk(v1, v2, walk, walk);
+				//g->setEdgeWalk(v1, v2, walk, walk);
 			}
 		}
 	}

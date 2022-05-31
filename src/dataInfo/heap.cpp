@@ -1,135 +1,125 @@
 #include "dataInfo.h"
 namespace dataInfo
 {
-	template <typename E>
-	class heap
+	//构造函数
+	Heap::Heap(const int h[], int n) : num(n)
 	{
-	private:
-		E *Heap;	 //堆序列的指针
-		int maxsize; //堆的最大容量
-		int n;		 //堆里面的元素数量
-
-		//将元素放在它应在的位置
-		void siftdown(int pos)
+		data = new int *[num];
+		for (int i = 0; i < num; i++)
 		{
-			while (!isLeaf(pos))
-			{
-				int j = leftchild(pos);
-				int rc = rightchild(pos);
-				if ((rc < n) && prior(Heap[rc], Heap[j]))
-					j = rc;
-				if (prior(Heap[pos], Heap[j]))
-					return;
-				swap(Heap, pos, j);
-				pos = j;
-			}
+			data[i] = new int[2];
 		}
-
-	public:
-		//构造函数
-		heap(E *h, int num, int max)
+		site = new int[num];
+		for (int i = 0; i < num; i++)
 		{
-			Heap = h;
-			n = num;
-			maxsize = max;
-			buildHeap();
+			data[i][0] = h[i];
+			data[i][1] = i;
+			site[i] = i;
 		}
-		//返回堆的大小
-		int size() const
+		for (int i = num / 2 - 1; i >= 0; i--)
+			siftDown(i);
+	}
+	//交换值
+	inline void Heap::swap(int i, int j)
+	{
+		int tmp2 = site[data[i][1]];
+		site[data[i][1]] = site[j];
+		site[data[j][1]] = tmp2;
+		int *tmp1 = data[i];
+		data[i] = data[j];
+		data[j] = tmp1;
+	}
+	//向上递归
+	void Heap::siftDown(int pos)
+	{
+		while (!isLeaf(pos))
 		{
-			return n;
+			//获取子节点的site中的位置。
+			int j = leftchild(pos);
+			int rc = rightchild(pos);
+			//找出左右孩子中最大的一个
+			if ((rc < num) && prior(data[rc], data[j]))
+				j = rc;
+			//如果根已经是子节点中最大的一个则返回。
+			if (prior(data[pos], data[j]))
+				return;
+			//交换，使根节点成为最大的一个。
+			swap(pos, j);
+			//向下递归子节点。（因为子节点与根节点交换发生了变动）
+			pos = j;
 		}
-		//判断是否为叶节点
-		bool isLeaf(int pos) const
+	}
+	//上溯
+	void Heap::siftUp(int pos)
+	{
+		while ((pos != 0) && (prior(data[pos], data[parent(pos)])))
 		{
-			return (pos >= n / 2) && (pos < n);
+			swap(pos, parent(pos));
+			pos = parent(pos);
 		}
-		//返回左节点
-		int leftchild(int pos) const
+	}
+	//更新
+	void Heap::update(int i, int d)
+	{
+		for (int ii = 0; ii < num; ii++)
 		{
-			return 2 * pos + 1;
+			cout << site[ii];
 		}
-		//返回右节点
-		int rightchild(int pos) const
+		cout << endl;
+		int pos = site[i];
+		data[pos][0] = d;
+		siftUp(pos);
+		siftDown(pos);
+	}
+	//判断是否为叶节点
+	inline bool Heap::isLeaf(int pos)
+	{
+		return (pos >= num / 2) && (pos < num);
+	}
+	//返回左节点
+	inline int Heap::leftchild(int pos)
+	{
+		return 2 * pos + 1;
+	}
+	//返回右节点
+	inline int Heap::rightchild(int pos)
+	{
+		return 2 * pos + 2;
+	}
+	//返回父节点
+	inline int Heap::parent(int pos)
+	{
+		return (pos - 1) / 2;
+	}
+	//判断大小-小根堆
+	inline bool Heap::prior(int *a, int *b)
+	{
+		return a[0] > b[0] ? false : true;
+	}
+	//返回堆的大小
+	int Heap::size() const
+	{
+		return num;
+	}
+	//移除根节点
+	int *Heap::removeFirst()
+	{
+		if (num <= 0)
 		{
-			return 2 * pos + 2;
+			cout << "堆已空。" << endl;
+			throw -1;
 		}
-		//返回父节点
-		int parent(int pos) const
+		swap(0, --num);
+		if (num != 0)
+			siftDown(0);
+		return data[num];
+	}
+	//打印
+	void Heap::print()
+	{
+		for (int i = 0; i < num; i++)
 		{
-			return (pos - 1) / 2;
+			cout << data[i][1] << " " << data[i][0] << endl;
 		}
-		//建堆
-		void buildHeap()
-		{
-			for (int i = n / 2 - 1; i >= 0; i--)
-				siftdown(i);
-		}
-		//插入一个元素
-		void insert(const E &it)
-		{
-			assert(n < maxsize, "Heap is full");
-			int curr = n++;
-			Heap[curr] = it;
-			while ((curr != 0) && (prior(Heap[curr], Heap[parent(curr)])))
-			{
-				swap(Heap, curr, parent(curr));
-				curr = parent(curr);
-			}
-		}
-		//移除根节点
-		E removefirst()
-		{
-			assert(n > 0, "Heap is empty");
-			swap(Heap, 0, --n);
-			if (n != 0)
-				siftdown(0);
-			return Heap[n];
-		}
-		//移除任意一个元素
-		E remove(int pos)
-		{
-			assert((pos >= 0) && (pos < n), "Bad position");
-			if (pos == (n - 1))
-				n--;
-			else
-			{
-				swap(Heap, pos, --n);
-				while ((pos) != 0 && (prior(Heap[pos], Heap[parent(pos)])))
-				{
-					swap(Heap, pos, parent(pos));
-					pos = parent(pos);
-				}
-				if (n != 0)
-					siftdown(pos);
-			}
-			return Heap[n];
-		}
-		//判断第一个参数是否再第二个参数之前
-		bool prior(E a, E b)
-		{
-
-			if (a > b)
-				return true;
-			else
-				return false;
-		}
-		//交换值
-		void swap(E *heap, int i, int j)
-		{
-			E temp;
-			temp = heap[i];
-			heap[i] = heap[j];
-			heap[j] = temp;
-		}
-		//打印
-		void print()
-		{
-			for (int i = 0; i < n; i++)
-			{
-				cout << Heap[i] << " ";
-			}
-			cout << endl;
-		}
-	};
+	}
 }
