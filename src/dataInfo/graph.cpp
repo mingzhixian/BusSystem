@@ -423,7 +423,6 @@ namespace dataInfo
 			Heap h(u, NumVertices);
 			int *tmpMini = h.removeFirst();
 			int mini = tmpMini[1];
-			cout << endl;
 			s[mini] = tmpMini[0];
 			u[mini] = 10000;
 			isS[mini] = true;

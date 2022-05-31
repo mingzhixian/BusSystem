@@ -9,7 +9,7 @@ namespace busDaemon
 		//全局化常用参数
 		site = s;
 		cache = c;
-		/* //启动守护进程，关闭主进程
+		//启动守护进程，关闭主进程
 		pid_t pid = -1;
 		//创建子进程
 		pid = fork();
@@ -41,7 +41,7 @@ namespace busDaemon
 		//关闭文件描述符
 		close(STDIN_FILENO);
 		close(STDOUT_FILENO);
-		close(STDERR_FILENO); */
+		close(STDERR_FILENO);
 
 		//打开监听信号程序
 		daemonHandler();
