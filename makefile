@@ -31,6 +31,10 @@ over:
 run:busSystem 
 	$(OUT)/busSystem
 
+#运行测试用用户端软件
+testUsr:
+	$(CC) -o ./test/test ./test/test.cpp && ./test/test
+
 #清理中间文件
 clean:
 	rm -rf $(TMP)
