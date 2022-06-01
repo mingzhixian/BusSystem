@@ -7,13 +7,29 @@
 ## 部署
 
 1. 根据实际情况修改siteInfo中的站点信息（格式参考siteInfo/rule.md）
+
 2. 编译软件
+
 ```shell
 make
 ```
+
 3. 运行软件（守护进程）
+
 ```shell
 ./out/busSystem
+```
+
+**二三步也可以使用以下命令代替**
+
+```shell
+make run
+```
+
+4. 测试
+
+```shell
+make testUsr
 ```
 
 ## 使用
