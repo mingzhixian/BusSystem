@@ -38,26 +38,28 @@ mode:1--时间最短优先、2--步行最少优先
 .
 ├── makefile                                    - make文件
 ├── README                                      - 项目说明文件 
-└── src                                         - 项目源代码文件夹
-    ├── daemon                                      - 守护进程
-    │   └── daemon.cpp                                  - 守护进程主程序
-    ├── dataInfo                                    - 数据处理
-    │   ├── graph.cpp                                   - 图操作相关工作集
-    │   ├── hash.cpp                                    - 哈希链表相关工作集
-    │   └── heap.cpp                                    - 堆处理相关工作集
-    ├── header                                      - 头文件
-    │   ├── daemon.h                                    - 守护进程头文件
-    │   ├── dataInfo.h                                  - 数据处理头文件
-    │   ├── public.h                                    - 公共头文件
-    │   └── siteInfo.h                                  - 线路信息头文件
-    ├── main                                        - 主程序入口
-    │   └── main.cpp                                    - 主程序
-    └── siteInfo                                    - 线路信息处理
-        ├── getinfo.py                                  - 公交信息爬虫示例
-        ├── parseSiteInfo.cpp                           - 线路信息处理相关工作集
-        ├── rule.md                                     - 线路信息文本文件规范
-        ├── siteinfo-test.txt                           - 测试用模仿线路信息文本文件
-        └── siteinfo.txt                                - 线路信息文本文件示例
+├── src                                         - 项目源代码文件夹
+│   ├── daemon                                      - 守护进程
+│   │   └── daemon.cpp                                  - 守护进程主程序
+│   ├── dataInfo                                    - 数据处理
+│   │   ├── graph.cpp                                   - 图操作相关工作集
+│   │   ├── hash.cpp                                    - 哈希链表相关工作集
+│   │   └── heap.cpp                                    - 堆处理相关工作集
+│   ├── header                                      - 头文件
+│   │   ├── daemon.h                                    - 守护进程头文件
+│   │   ├── dataInfo.h                                  - 数据处理头文件
+│   │   ├── public.h                                    - 公共头文件
+│   │   └── siteInfo.h                                  - 线路信息头文件
+│   ├── main                                        - 主程序入口
+│   │   └── main.cpp                                    - 主程序
+│   └── siteInfo                                    - 线路信息处理
+│       ├── getinfo.py                                  - 公交信息爬虫示例
+│       ├── parseSiteInfo.cpp                           - 线路信息处理相关工作集
+│       ├── rule.md                                     - 线路信息文本文件规范
+│       ├── siteinfo-test.txt                           - 测试用模仿线路信息文本文件
+│       └── siteinfo.txt                                - 线路信息文本文件示例
+└── testUsr                                     - 测试用用户端程序
+    └── testUsr.cpp                                 - 测试用用户端主程序       
 </pre>
 
 ## 项目说明

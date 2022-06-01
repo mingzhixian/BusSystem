@@ -22,7 +22,6 @@ CODE=$(CC) -c -I $(HEADER) $(i) -o $(TMP)/$(patsubst %.cpp,%.o,$(notdir $(i)));
 compile:
 	$(foreach i ,$(CPP), $(CODE))
 	
-
 #编译完成后操作
 over:
 	p=`pwd` && n=$${p//\//\\\/} && sed -i "s/$$n/needToSed/" $(SOURCE)/siteInfo/parseSiteInfo.cpp
@@ -33,7 +32,7 @@ run:busSystem
 
 #运行测试用用户端软件
 testUsr:
-	$(CC) -o ./test/test ./test/test.cpp && ./test/test
+	$(CC) -o $(OUT)/testUsr ./test/testUsr.cpp && $(OUT)/testUsr
 
 #清理中间文件
 clean:
