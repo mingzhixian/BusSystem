@@ -31,8 +31,11 @@ run:busSystem
 	$(OUT)/busSystem
 
 #运行测试用用户端软件
-testUsr:
-	$(CC) -o $(OUT)/testUsr ./test/testUsr.cpp && $(OUT)/testUsr
+testUsr:compileTestUsr
+	$(OUT)/testUsr
+
+compileTestUsr:
+	$(CC) -o $(OUT)/testUsr ./testUsr/testUsr.cpp 
 
 #清理中间文件
 clean:
